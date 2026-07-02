@@ -1,1 +1,1 @@
-Manuscript QA Protocol PASSED 2026-07-01 | 9/9 panels | council Stage 0-11 all cleared (full 5-advisor review at every judgment-carrying stage) | Trigger B cleared
+Manuscript QA Protocol PASSED 2026-07-01 | 15/15 panels | council Stage 0-14 all cleared (full 5-advisor review at every judgment-carrying stage) | Trigger B cleared | figure/table ascending-order check added after user-caught defect

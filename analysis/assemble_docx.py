@@ -45,21 +45,29 @@ REFS = {
     "Ghana Statistical Service 2021": "Ghana Statistical Service. Ghana 2021 Population and Housing Census: General Report. Accra: GSS; 2021.",
 }
 
+# NOTE: figure/table NUMBERS below reflect first-citation order in Results (renumbered
+# 2026-07-01 after a user-caught defect: PNG filenames retain their original Stage-6 build
+# order and do NOT match the final citation numbering -- e.g. "Figure 3" below uses the file
+# figure6_mdr_gantt.png. This is intentional; do not "fix" filenames to match, just keep this
+# dict as the single source of truth for the numbering.
 FIGCAP = {
     1: ("figure1_incidence_trend.png", "Figure 1. National TB incidence, Ghana, 2000-2024, with Sen's slope trend and the 2020-2021 COVID-era window."),
     2: ("figure2_forecast_comparison.png", "Figure 2. Rolling-origin forecasts of national TB incidence by model (ARIMA, LSTM, XGBoost), Model A (full panel)."),
-    3: ("figure3_tvi_choropleth.png", "Figure 3. District TB-Vulnerability Index (TVI-PCA), 261 districts, 2021 census cross-section."),
-    4: ("figure4_lisa_clusters.png", "Figure 4. LISA clusters of district TVI-PCA (High-High, Low-Low, p<0.05)."),
-    5: ("figure5_shap_importance.png", "Figure 5. SHAP mean |value| feature importance, XGBoost incidence forecast (3-year lag structure)."),
-    6: ("figure6_mdr_gantt.png", "Figure 6. MDR-TB cascade series data-availability windows (locked, continuity-verified)."),
+    3: ("figure6_mdr_gantt.png", "Figure 3. MDR-TB cascade series data-availability windows (locked, continuity-verified)."),
+    4: ("figure3_tvi_choropleth.png", "Figure 4. District TB-Vulnerability Index (TVI-PCA), 261 districts, 2021 census cross-section."),
+    5: ("figure4_lisa_clusters.png", "Figure 5. LISA clusters of district TVI-PCA (High-High, Low-Low, p<0.05)."),
+    6: ("figure5_shap_importance.png", "Figure 6. SHAP mean |value| feature importance, XGBoost incidence forecast (3-year lag structure)."),
 }
 
-TABLES = {  # longest keys first for matching
-    "1a": ("table1a_national_tb_panel_summary.csv", "Table 1a. Descriptive summary of the national TB panel (2000-2024).", None),
-    "1b": ("table1b_district_vulnerability_summary.csv", "Table 1b. Descriptive summary of district vulnerability-index components (n=261).", None),
+# NOTE: table NUMBERS reflect first-citation order in Results (renumbered 2026-07-01,
+# same fix as FIGCAP above). CSV filenames retain their original Stage-6 names.
+TABLES = {  # longest keys first for matching (single-digit keys still need this since "10" would
+            # otherwise partial-match "1" -- not currently an issue at 5 tables, kept for safety)
+    "1": ("table1a_national_tb_panel_summary.csv", "Table 1. Descriptive summary of the national TB panel (2000-2024).", None),
     "2": ("table2_mann_kendall_trends.csv", "Table 2. Mann-Kendall trend test results across all Track A series.", None),
     "3": ("table3_mdr_subanalysis.csv", "Table 3. MDR-TB cascade shorter-window sub-analysis (descriptive + one-step ARIMA forecast).", None),
-    "4": ("table4_shap_importance.csv", "Table 4. SHAP feature importance, XGBoost incidence forecast.", None),
+    "4": ("table1b_district_vulnerability_summary.csv", "Table 4. Descriptive summary of district vulnerability-index components (n=261).", None),
+    "5": ("table4_shap_importance.csv", "Table 5. SHAP feature importance, XGBoost incidence forecast.", None),
 }
 
 

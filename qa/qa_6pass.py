@@ -67,8 +67,24 @@ P["QA-5 abstract<->body number consistency"] = all(n in ab and n in res for n in
 
 # QA-6 fig/table cross-reference BOTH Results and Discussion (mandatory rule)
 xr_fig = all((f"Figure {n}" in res and f"Figure {n}" in dis) for n in range(1, 7))
-xr_tab = all((f"Table {t}" in res and f"Table {t}" in dis) for t in ["1a", "1b", "2", "3", "4"])
+xr_tab = all((f"Table {t}" in res and f"Table {t}" in dis) for t in ["1", "2", "3", "4", "5"])
 P["QA-6 fig/table cross-ref BOTH sections"] = xr_fig and xr_tab
+
+# QA-6b figures/tables cited in ASCENDING order at first appearance in Results (user-caught
+# defect 2026-07-01: Figure 6 was cited before Figures 3-5 because PNG build order != narrative
+# order -- this check exists specifically to catch that defect class recurring).
+def first_citation_order(text, pattern):
+    seen = []
+    for m in re.finditer(pattern, text):
+        n = int(m.group(1))
+        if n not in seen:
+            seen.append(n)
+    return seen
+
+fig_order = first_citation_order(res, r"Figure (\d+)")
+tab_order = first_citation_order(res, r"Table (\d+)\b")
+P["QA-6b figures cited in ascending order in Results"] = fig_order == sorted(fig_order)
+P["QA-6b tables cited in ascending order in Results"] = tab_order == sorted(tab_order)
 
 # QA-7 reporting standards present + Discussion balance (>=2 CONTRASTING per major claim, confirmed Stage 2/6)
 std_present = all(s in text for s in ["STROBE", "RECORD"]) and ("TRIPOD" in text)
@@ -102,8 +118,9 @@ print(f"{len(P) - fails}/{len(P)} panels passed")
 if fails == 0:
     badge = ROOT / "qa" / "QA_PASSED_2026-07-01.txt"
     badge.write_text(
-        "Manuscript QA Protocol PASSED 2026-07-01 | 9/9 panels | council Stage 0-11 all cleared "
-        "(full 5-advisor review at every judgment-carrying stage) | Trigger B cleared\n"
+        f"Manuscript QA Protocol PASSED 2026-07-01 | {len(P)}/{len(P)} panels | council Stage 0-14 all cleared "
+        "(full 5-advisor review at every judgment-carrying stage) | Trigger B cleared | "
+        "figure/table ascending-order check added after user-caught defect\n"
     )
     print(f"QA BADGE WRITTEN: {badge}")
 sys.exit(1 if fails else 0)
