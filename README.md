@@ -57,13 +57,13 @@ All inputs are public-domain, aggregate, secondary data; no individual-level rec
 .
 ├── analysis/         build_master · build_vulnerability_index · lock_hyperparameters · mann_kendall_trends
 │                     · forecast_rolling_origin · mdr_subanalysis · spatial_analysis · shap_decomposition
-│                     · build_figures · build_release_package · build_dashboard · build_poster · _labels
+│                     · build_figures · build_release_package · _labels
 ├── outputs/
 │   ├── data/         intermediate analysis outputs (locked hyperparameters, forecast folds, etc.)
 │   ├── tables/        manuscript tables (table1a, table1b, table2, table3, table4, CSV)
 │   ├── figures/        manuscript figures (figure1–figure6, 300 dpi, colourblind-safe)
 │   └── release/        FAIR-compliant master CSVs + variable_provenance.csv (data dictionary)
-├── dashboard/        TB_Trends_Ghana_Dashboard.html (bespoke, vanilla JS + inline SVG)
+├── dashboard/        TB_Trends_Ghana_Dashboard.html (self-contained, inline ECharts)
 ├── poster/           TB_Trends_Ghana_Poster.html (A0, print-ready)
 ├── qa/               qa_6pass.py · QA_PASSED_2026-07-01.txt
 ├── tests/            test_pipeline.py (5 reproducibility tests)
@@ -86,9 +86,8 @@ All inputs are public-domain, aggregate, secondary data; no individual-level rec
 5. **MDR-TB cascade + spatial** (`mdr_subanalysis.py`, `spatial_analysis.py`) — shorter-window cascade
    sub-analysis, individually continuity-verified per series; queen contiguity, Global Moran's I, Getis-Ord Gi*,
    FDR-adjusted Local Moran's I (LISA) on district TVI.
-6. **Interpretation + release** (`shap_decomposition.py`, `build_figures.py`, `build_release_package.py`,
-   `build_dashboard.py`, `build_poster.py`) — SHAP feature importance for the XGBoost forecast; 6 manuscript
-   figures; the FAIR master CSV release; the bespoke dashboard and A0 poster.
+6. **Interpretation + release** (`shap_decomposition.py`, `build_figures.py`, `build_release_package.py`) —
+   SHAP feature importance for the XGBoost forecast; 6 manuscript figures; the FAIR master CSV release.
 
 ## 7. Reproducibility
 
@@ -104,8 +103,6 @@ python analysis/spatial_analysis.py            # Moran's I / Getis-Ord Gi* / LIS
 python analysis/shap_decomposition.py          # SHAP feature importance, XGBoost forecast
 python analysis/build_figures.py               # 6 manuscript figures
 python analysis/build_release_package.py       # FAIR master CSV release + data dictionary
-python analysis/build_dashboard.py             # interactive dashboard
-python analysis/build_poster.py                # A0 poster
 python qa/qa_6pass.py                          # 15-panel QA protocol (requires local manuscript, not in repo)
 pytest tests/ -v                                # 5 reproducibility tests
 ```
@@ -125,18 +122,20 @@ all scripts, rebuilds the master datasets, and runs the test suite on every push
 
 ## 9. Dashboard & poster — view or download
 
-Both are self-contained offline HTML files (vanilla JS + inline SVG — no CDN, no server), colourblind-safe, and
-under 60KB.
+Both are self-contained offline HTML files (**inline ECharts + inline district geometry** — no CDN, no server),
+colourblind-safe, and interactive (zoomable TVI choropleth + LISA cluster map, cluster/metric/focus-district
+filters, threshold flagging, CSV/PNG export).
 
 | Artefact | View on GitHub | Live preview | Direct download (raw HTML) |
 |---|---|---|---|
 | Interactive dashboard | [View](https://github.com/valentineghanem-bit/tb-trends-lstm-forecasting-ghana/blob/main/dashboard/TB_Trends_Ghana_Dashboard.html) | [Preview](https://htmlpreview.github.io/?https://github.com/valentineghanem-bit/tb-trends-lstm-forecasting-ghana/blob/main/dashboard/TB_Trends_Ghana_Dashboard.html) | [Download](https://raw.githubusercontent.com/valentineghanem-bit/tb-trends-lstm-forecasting-ghana/main/dashboard/TB_Trends_Ghana_Dashboard.html) |
 | Conference poster (A0, HTML) | [View](https://github.com/valentineghanem-bit/tb-trends-lstm-forecasting-ghana/blob/main/poster/TB_Trends_Ghana_Poster.html) | [Preview](https://htmlpreview.github.io/?https://github.com/valentineghanem-bit/tb-trends-lstm-forecasting-ghana/blob/main/poster/TB_Trends_Ghana_Poster.html) | [Download](https://raw.githubusercontent.com/valentineghanem-bit/tb-trends-lstm-forecasting-ghana/main/poster/TB_Trends_Ghana_Poster.html) |
 
-> **Tip:** both files are fully self-contained — vanilla JS and inline SVG, no external libraries or CDNs — so
-> they render **offline** with no server or network. The poster is print-ready at A0 (841 × 1189 mm). Open a
+> **Tip:** both files are fully self-contained — ECharts and the district map geometry are inlined — so they
+> render **offline** with no server or network. The poster is print-ready at A0 (841 × 1189 mm). Open a
 > downloaded copy with `start dashboard\TB_Trends_Ghana_Dashboard.html` (Windows), `open …` (macOS) or
-> `xdg-open …` (Linux).
+> `xdg-open …` (Linux). Built with the bespoke HI-EI pipeline (inline ECharts + inline SVG; supersedes the
+> legacy 60 KB ceiling).
 
 ## 10. Data dictionary
 
