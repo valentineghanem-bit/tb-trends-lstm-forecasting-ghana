@@ -1,0 +1,25 @@
+variable,forecast_tier,n_points,first_year,last_year,trend,p_value,sens_slope,significant_at_0.05
+tb_incidence_per100k,forecast_eligible,25,2000,2024,decreasing,0.0,-4.0,True
+tb_incidence_hiv_pos_per100k,forecast_eligible,24,2000,2023,decreasing,0.0,-2.375,True
+mdr_rr_tb_confirmed,forecast_eligible,18,2005,2024,increasing,0.0,16.2,True
+tb_incident_cases_hiv_pos,forecast_eligible,25,2000,2024,decreasing,0.0,-387.3684,True
+tx_success_prev_treated_pct,forecast_eligible,21,2003,2023,increasing,0.0,1.7303,True
+tx_success_new_pct,forecast_eligible,24,2000,2023,increasing,0.0,1.1882,True
+new_cases_tested_rr_mdr_pct,forecast_eligible,17,2005,2024,increasing,0.0,7.5462,True
+mdr_tb_started_treatment,forecast_eligible,17,2008,2024,increasing,0.0,16.5417,True
+tx_success_hiv_pos_pct,forecast_eligible,18,2006,2023,increasing,0.0,0.8889,True
+tb_hiv_pos_on_art_pct,forecast_eligible,21,2003,2024,increasing,0.0,3.6771,True
+life_expectancy_years,forecast_eligible,22,2000,2021,increasing,0.0,0.3874,True
+art_coverage_plhiv_pct,forecast_eligible,25,2000,2024,increasing,0.0,2.25,True
+hiv_prevalence_adult_15_49_pct,forecast_eligible,25,2000,2024,decreasing,0.0,-0.04,True
+tb_known_hiv_status_pct,forecast_eligible,22,2003,2024,increasing,0.0,3.5714,True
+tb_tested_hiv_positive_pct,forecast_eligible,22,2003,2024,decreasing,0.0,-1.0,True
+tb_treatment_coverage_pct,forecast_eligible,25,2000,2024,increasing,0.0001,0.4083,True
+mdr_rr_tb_estimated_incident,descriptive_only_excluded,10,2015,2024,decreasing,0.0001,-85.0,True
+tb_new_relapse_notified,forecast_eligible,25,2000,2024,increasing,0.0004,203.0625,True
+medical_doctors_density,forecast_eligible,18,2004,2023,increasing,0.0007,0.05,True
+prev_treated_tested_rr_mdr_pct,forecast_eligible,17,2005,2024,increasing,0.0008,4.9,True
+gghe_d_pct_gdp,forecast_eligible,23,2000,2022,increasing,0.013,0.0444,True
+tx_success_mdr_pct,forecast_eligible,13,2010,2022,no trend,0.1272,1.4727,False
+tb_incident_cases_total,forecast_eligible,25,2000,2024,no trend,0.459,0.0,False
+tx_success_xdr_pct,descriptive_only_excluded,5,2018,2022,no trend,0.4624,-12.75,False

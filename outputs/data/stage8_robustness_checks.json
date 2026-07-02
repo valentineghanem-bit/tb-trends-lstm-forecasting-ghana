@@ -1,0 +1,38 @@
+{
+  "lstm_seed_robustness": {
+    "seeds_tested": [
+      1,
+      2,
+      3,
+      42,
+      100
+    ],
+    "mae_by_seed": {
+      "1": 3.921,
+      "2": 3.914,
+      "3": 4.244,
+      "42": 3.707,
+      "100": 3.877
+    },
+    "mean_mae": 3.932,
+    "sd_mae": 0.174
+  },
+  "arima_order_sensitivity": {
+    "adaptive_per_fold": {
+      "order": "AIC-selected each fold",
+      "mae": 0.37,
+      "rmse": 0.52,
+      "mape_pct": 0.25
+    },
+    "locked_fold1_only": {
+      "order": [
+        2,
+        1,
+        0
+      ],
+      "mae": 0.406,
+      "rmse": 0.541,
+      "mape_pct": 0.28
+    }
+  }
+}

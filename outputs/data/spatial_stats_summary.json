@@ -1,0 +1,30 @@
+{
+  "tvi_pca": {
+    "global_moran_I": 0.8015,
+    "global_moran_p_sim": 0.001,
+    "n_districts": 255,
+    "lisa_significant_clusters_p05": 99,
+    "lisa_cluster_counts": {
+      "Not significant": 156,
+      "High-High": 52,
+      "Low-Low": 45,
+      "Low-High": 2
+    },
+    "gi_star_hotspots_p05": 45,
+    "gi_star_coldspots_p05": 53
+  },
+  "tvi_equal": {
+    "global_moran_I": 0.723,
+    "global_moran_p_sim": 0.001,
+    "n_districts": 255,
+    "lisa_significant_clusters_p05": 105,
+    "lisa_cluster_counts": {
+      "Not significant": 150,
+      "Low-Low": 55,
+      "High-High": 47,
+      "Low-High": 3
+    },
+    "gi_star_hotspots_p05": 57,
+    "gi_star_coldspots_p05": 52
+  }
+}

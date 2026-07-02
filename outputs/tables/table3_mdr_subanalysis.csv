@@ -1,0 +1,6 @@
+variable,window,n_points,mk_trend,mk_p,sens_slope,arima_one_step_forecast_next_year
+mdr_tb_started_treatment,2008-2024,17,increasing,0.0,16.5417,181.05
+tx_success_mdr_pct,2010-2022,13,no trend,0.1272,1.4727,64.46
+new_cases_tested_rr_mdr_pct,2011-2024,14,increasing,0.0001,9.0909,98.78
+prev_treated_tested_rr_mdr_pct,2010-2024,15,increasing,0.0049,1.75,100.0
+mdr_rr_tb_confirmed,2010-2024,15,increasing,0.0005,18.1667,192.0

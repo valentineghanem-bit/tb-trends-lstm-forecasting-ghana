@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>TB Trends & Forecasting Ghana — A0 Poster</title>
+<style>
+  @page { size: 841mm 1189mm; margin: 0; }
+  @media print { body { width: 841mm; height: 1189mm; margin: 0; } }
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, "Segoe UI", Arial, sans-serif; margin: 0; width: 841mm; min-height: 1189mm;
+          background: #fff; color: #1a1a1a; }
+  .poster { padding: 30mm; display: grid; grid-template-rows: auto auto 1fr auto; gap: 12mm; height: 100%; }
+  header { background: #6c3483; color: #fff; padding: 14mm 20mm; border-radius: 6mm; }
+  header h1 { margin: 0 0 6mm; font-size: 34pt; line-height: 1.15; }
+  header .authors { font-size: 16pt; margin: 0 0 2mm; }
+  header .affil { font-size: 13pt; opacity: 0.9; }
+  .banner { background: #0072B2; color: #fff; padding: 8mm 14mm; border-radius: 6mm; font-size: 20pt; text-align: center; font-weight: 600; }
+  .grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10mm; }
+  .col { display: flex; flex-direction: column; gap: 10mm; }
+  .panel { background: #fafafa; border: 1px solid #ddd; border-radius: 5mm; padding: 10mm; }
+  .panel h2 { font-size: 18pt; margin: 0 0 5mm; color: #6c3483; border-bottom: 2px solid #6c3483; padding-bottom: 2mm; }
+  .panel p, .panel li { font-size: 13pt; line-height: 1.5; }
+  .panel svg { width: 100%; height: auto; }
+  .limitations { background: #fff3e0; border: 2px solid #E69F00; border-radius: 5mm; padding: 8mm; font-size: 12.5pt; }
+  .limitations h2 { font-size: 16pt; margin: 0 0 4mm; }
+  .methods-strip { display: flex; gap: 6mm; flex-wrap: wrap; font-size: 11.5pt; }
+  .methods-strip span { background: #eee; padding: 3mm 6mm; border-radius: 20mm; }
+  footer { display: flex; justify-content: space-between; align-items: center; font-size: 11pt; color: #555; border-top: 2px solid #ddd; padding-top: 6mm; }
+  .qr { width: 30mm; height: 30mm; background: #eee; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; font-size: 9pt; color: #777; text-align: center; }
+  .stat { font-size: 26pt; font-weight: 700; color: #0072B2; }
+</style>
+</head>
+<body>
+<div class="poster">
+  <header>
+    <h1>Trends, Treatment Gaps and LSTM Forecasting of Tuberculosis in Ghana, with District-Level Structural Risk Stratification</h1>
+    <div class="authors">Valentine Golden Ghanem</div>
+    <div class="affil">COCOBOD Cocoa Clinic &middot; University of Cape Coast &middot; ORCID 0009-0002-8332-0220</div>
+  </header>
+
+  <div class="banner">National TB incidence declined 42% (2000&ndash;2024), but the MDR-TB treatment-success gap has not closed &mdash; and classical ARIMA outperforms deep learning for small-N annual forecasting.</div>
+
+  <div class="grid3">
+    <div class="col">
+      <div class="panel">
+        <h2>Background &amp; Objectives</h2>
+        <p>Ghana's TB control faces two compounding challenges: COVID-19 disrupted case detection worldwide, and MDR-TB treatment success remains below WHO targets across sub-Saharan Africa. No district-level TB surveillance data exists in Ghana's public reporting.</p>
+        <ul>
+          <li>Characterise 25-year national TB trends &amp; forecast future trajectory</li>
+          <li>Quantify the MDR-TB treatment cascade gap</li>
+          <li>Compare LSTM, ARIMA, XGBoost for small-N forecasting</li>
+          <li>Map district structural TB-vulnerability (not observed burden)</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h2>Methods</h2>
+        <div class="methods-strip">
+          <span>WHO-GHO 2000&ndash;2024</span><span>Mann-Kendall</span><span>Rolling-origin CV</span>
+          <span>LSTM+ARIMA+XGBoost</span><span>Fold-1 hyperparameter lock</span>
+          <span>PCA TB-Vulnerability Index</span><span>Moran's I / Gi* / LISA</span><span>SHAP</span>
+        </div>
+        <p style="margin-top:6mm">Dual-track design: (1) national temporal analysis (2000&ndash;2024, genuine data); (2) district cross-sectional structural-deprivation index (2021 census, single timepoint) &mdash; explicitly not TB-specific.</p>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <h2>Results: National Trends</h2>
+        <p><span class="stat">-42%</span> incidence decline (216&rarr;126/100k, Sen's slope &minus;4.0/yr, p&lt;0.0001)</p>
+        <svg viewBox="0 0 700 280" role="img" aria-labelledby="p1" style="width:100%;height:auto">
+<title id="p1">TB incidence per 100,000 trend, 2000-2024</title>
+<line x1="55" y1="245.0" x2="680" y2="245.0" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="249.0" font-size="10" text-anchor="end" fill="#555">0</text><line x1="55" y1="188.8" x2="680" y2="188.8" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="192.8" font-size="10" text-anchor="end" fill="#555">59</text><line x1="55" y1="132.5" x2="680" y2="132.5" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="136.5" font-size="10" text-anchor="end" fill="#555">119</text><line x1="55" y1="76.2" x2="680" y2="76.2" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="80.2" font-size="10" text-anchor="end" fill="#555">178</text><line x1="55" y1="20.0" x2="680" y2="20.0" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="24.0" font-size="10" text-anchor="end" fill="#555">238</text>
+<polyline points="55.0,40.5 81.0,42.3 107.1,44.2 133.1,47.1 159.2,49.9 185.2,52.8 211.2,56.6 237.3,59.4 263.3,64.1 289.4,67.9 315.4,71.7 341.5,76.4 367.5,81.2 393.5,85.9 419.6,88.8 445.6,93.5 471.7,97.3 497.7,101.1 523.8,104.8 549.8,108.6 575.8,112.4 601.9,116.2 627.9,119.1 654.0,122.8 680.0,125.7" fill="none" stroke="#0072B2" stroke-width="2.5"/>
+<circle cx="55.0" cy="40.5" r="2.5" fill="#0072B2"/><circle cx="81.0" cy="42.3" r="2.5" fill="#0072B2"/><circle cx="107.1" cy="44.2" r="2.5" fill="#0072B2"/><circle cx="133.1" cy="47.1" r="2.5" fill="#0072B2"/><circle cx="159.2" cy="49.9" r="2.5" fill="#0072B2"/><circle cx="185.2" cy="52.8" r="2.5" fill="#0072B2"/><circle cx="211.2" cy="56.6" r="2.5" fill="#0072B2"/><circle cx="237.3" cy="59.4" r="2.5" fill="#0072B2"/><circle cx="263.3" cy="64.1" r="2.5" fill="#0072B2"/><circle cx="289.4" cy="67.9" r="2.5" fill="#0072B2"/><circle cx="315.4" cy="71.7" r="2.5" fill="#0072B2"/><circle cx="341.5" cy="76.4" r="2.5" fill="#0072B2"/><circle cx="367.5" cy="81.2" r="2.5" fill="#0072B2"/><circle cx="393.5" cy="85.9" r="2.5" fill="#0072B2"/><circle cx="419.6" cy="88.8" r="2.5" fill="#0072B2"/><circle cx="445.6" cy="93.5" r="2.5" fill="#0072B2"/><circle cx="471.7" cy="97.3" r="2.5" fill="#0072B2"/><circle cx="497.7" cy="101.1" r="2.5" fill="#0072B2"/><circle cx="523.8" cy="104.8" r="2.5" fill="#0072B2"/><circle cx="549.8" cy="108.6" r="2.5" fill="#0072B2"/><circle cx="575.8" cy="112.4" r="2.5" fill="#0072B2"/><circle cx="601.9" cy="116.2" r="2.5" fill="#0072B2"/><circle cx="627.9" cy="119.1" r="2.5" fill="#0072B2"/><circle cx="654.0" cy="122.8" r="2.5" fill="#0072B2"/><circle cx="680.0" cy="125.7" r="2.5" fill="#0072B2"/>
+<text x="55.0" y="263" font-size="10" text-anchor="middle" fill="#555">2000</text><text x="367.5" y="263" font-size="10" text-anchor="middle" fill="#555">2012</text><text x="680.0" y="263" font-size="10" text-anchor="middle" fill="#555">2024</text>
+</svg>
+      </div>
+      <div class="panel">
+        <h2>Forecasting Comparison</h2>
+        <p>ARIMA (MAE=0.37) vastly outperformed LSTM (3.71) and XGBoost (4.07) &mdash; robust to seed (SD=0.17) and to matching ARIMA's protocol to the other models' (MAE=0.41).</p>
+        <svg viewBox="0 0 700 280" role="img" aria-labelledby="p2" style="width:100%;height:auto">
+<title id="p2">Treatment success (%) trend, 2000-2023</title>
+<line x1="55" y1="245.0" x2="680" y2="245.0" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="249.0" font-size="10" text-anchor="end" fill="#555">0</text><line x1="55" y1="188.8" x2="680" y2="188.8" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="192.8" font-size="10" text-anchor="end" fill="#555">25</text><line x1="55" y1="132.5" x2="680" y2="132.5" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="136.5" font-size="10" text-anchor="end" fill="#555">50</text><line x1="55" y1="76.2" x2="680" y2="76.2" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="80.2" font-size="10" text-anchor="end" fill="#555">74</text><line x1="55" y1="20.0" x2="680" y2="20.0" stroke="#e5e5e5" stroke-width="1"/><text x="47" y="24.0" font-size="10" text-anchor="end" fill="#555">99</text>
+<polyline points="55.0,131.4 82.2,117.7 109.3,108.6 136.5,95.0 163.7,90.5 190.9,106.4 218.0,95.0 245.2,70.0 272.4,58.6 299.6,56.4 326.7,54.1 353.9,51.8 381.1,54.1 408.3,51.8 435.4,51.8 462.6,51.8 489.8,51.8 517.0,51.8 544.1,54.1 571.3,54.1 598.5,49.5 625.7,47.3 652.8,47.3 680.0,40.5" fill="none" stroke="#009E73" stroke-width="2.5"/>
+<circle cx="55.0" cy="131.4" r="2.5" fill="#009E73"/><circle cx="82.2" cy="117.7" r="2.5" fill="#009E73"/><circle cx="109.3" cy="108.6" r="2.5" fill="#009E73"/><circle cx="136.5" cy="95.0" r="2.5" fill="#009E73"/><circle cx="163.7" cy="90.5" r="2.5" fill="#009E73"/><circle cx="190.9" cy="106.4" r="2.5" fill="#009E73"/><circle cx="218.0" cy="95.0" r="2.5" fill="#009E73"/><circle cx="245.2" cy="70.0" r="2.5" fill="#009E73"/><circle cx="272.4" cy="58.6" r="2.5" fill="#009E73"/><circle cx="299.6" cy="56.4" r="2.5" fill="#009E73"/><circle cx="326.7" cy="54.1" r="2.5" fill="#009E73"/><circle cx="353.9" cy="51.8" r="2.5" fill="#009E73"/><circle cx="381.1" cy="54.1" r="2.5" fill="#009E73"/><circle cx="408.3" cy="51.8" r="2.5" fill="#009E73"/><circle cx="435.4" cy="51.8" r="2.5" fill="#009E73"/><circle cx="462.6" cy="51.8" r="2.5" fill="#009E73"/><circle cx="489.8" cy="51.8" r="2.5" fill="#009E73"/><circle cx="517.0" cy="51.8" r="2.5" fill="#009E73"/><circle cx="544.1" cy="54.1" r="2.5" fill="#009E73"/><circle cx="571.3" cy="54.1" r="2.5" fill="#009E73"/><circle cx="598.5" cy="49.5" r="2.5" fill="#009E73"/><circle cx="625.7" cy="47.3" r="2.5" fill="#009E73"/><circle cx="652.8" cy="47.3" r="2.5" fill="#009E73"/><circle cx="680.0" cy="40.5" r="2.5" fill="#009E73"/>
+<text x="55.0" y="263" font-size="10" text-anchor="middle" fill="#555">2000</text><text x="381.1" y="263" font-size="10" text-anchor="middle" fill="#555">2012</text><text x="680.0" y="263" font-size="10" text-anchor="middle" fill="#555">2023</text>
+</svg>
+      </div>
+    </div>
+
+    <div class="col">
+      <div class="panel">
+        <h2>MDR-TB Treatment Gap</h2>
+        <p>Testing &amp; treatment-initiation capacity expanded significantly, but treatment success showed <strong>no significant trend</strong> (p=0.13). Regional evidence (81.6% success, 9-country cohort) shows this gap is addressable via regimen standardisation.</p>
+        <svg viewBox="0 0 700 300" role="img" aria-labelledby="p3" style="width:100%;height:auto">
+<title id="p3">MDR-TB cascade trend magnitude</title>
+<line x1="55" y1="230" x2="680" y2="230" stroke="#999"/>
+<rect x="80.0" y="63.7" width="75.0" height="166.3" fill="#E69F00"/><text x="117.5" y="59.7" font-size="10" text-anchor="middle" fill="#333">17</text><rect x="205.0" y="215.2" width="75.0" height="14.8" fill="#E69F00"/><text x="242.5" y="211.2" font-size="10" text-anchor="middle" fill="#333">1</text><rect x="330.0" y="138.6" width="75.0" height="91.4" fill="#E69F00"/><text x="367.5" y="134.6" font-size="10" text-anchor="middle" fill="#333">9</text><rect x="455.0" y="212.4" width="75.0" height="17.6" fill="#E69F00"/><text x="492.5" y="208.4" font-size="10" text-anchor="middle" fill="#333">2</text><rect x="580.0" y="47.4" width="75.0" height="182.6" fill="#E69F00"/><text x="617.5" y="43.4" font-size="10" text-anchor="middle" fill="#333">18</text>
+<text x="117.5" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 117.5 244)">mdr tb started treatment</text><text x="242.5" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 242.5 244)">tx success mdr pct</text><text x="367.5" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 367.5 244)">new cases tested rr mdr pct</text><text x="492.5" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 492.5 244)">prev treated tested rr mdr pct</text><text x="617.5" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 617.5 244)">mdr rr tb confirmed</text>
+</svg>
+      </div>
+      <div class="panel">
+        <h2>District Structural Risk</h2>
+        <p>Strong spatial clustering (Moran's I=0.80, p=0.001; robustness r=0.987) concentrated in northern Ghana &mdash; a general deprivation index, not validated TB risk.</p>
+        <svg viewBox="0 0 700 300" role="img" aria-labelledby="p4" style="width:100%;height:auto">
+<title id="p4">Top 10 most-vulnerable districts</title>
+<line x1="55" y1="230" x2="680" y2="230" stroke="#999"/>
+<rect x="67.5" y="47.4" width="37.5" height="182.6" fill="#D55E00"/><text x="86.2" y="43.4" font-size="10" text-anchor="middle" fill="#333">5</text><rect x="130.0" y="62.3" width="37.5" height="167.7" fill="#D55E00"/><text x="148.8" y="58.3" font-size="10" text-anchor="middle" fill="#333">5</text><rect x="192.5" y="63.7" width="37.5" height="166.3" fill="#D55E00"/><text x="211.2" y="59.7" font-size="10" text-anchor="middle" fill="#333">5</text><rect x="255.0" y="70.9" width="37.5" height="159.1" fill="#D55E00"/><text x="273.8" y="66.9" font-size="10" text-anchor="middle" fill="#333">5</text><rect x="317.5" y="72.1" width="37.5" height="157.9" fill="#D55E00"/><text x="336.2" y="68.1" font-size="10" text-anchor="middle" fill="#333">5</text><rect x="380.0" y="74.5" width="37.5" height="155.5" fill="#D55E00"/><text x="398.8" y="70.5" font-size="10" text-anchor="middle" fill="#333">5</text><rect x="442.5" y="78.3" width="37.5" height="151.7" fill="#D55E00"/><text x="461.2" y="74.3" font-size="10" text-anchor="middle" fill="#333">4</text><rect x="505.0" y="78.6" width="37.5" height="151.4" fill="#D55E00"/><text x="523.8" y="74.6" font-size="10" text-anchor="middle" fill="#333">4</text><rect x="567.5" y="85.0" width="37.5" height="145.0" fill="#D55E00"/><text x="586.2" y="81.0" font-size="10" text-anchor="middle" fill="#333">4</text><rect x="630.0" y="86.8" width="37.5" height="143.2" fill="#D55E00"/><text x="648.8" y="82.8" font-size="10" text-anchor="middle" fill="#333">4</text>
+<text x="86.2" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 86.2 244)">Nabdam</text><text x="148.8" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 148.8 244)">Yunyoo Nasuan</text><text x="211.2" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 211.2 244)">Wa West</text><text x="273.8" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 273.8 244)">Central Gonja</text><text x="336.2" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 336.2 244)">East Mamprusi Municipal</text><text x="398.8" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 398.8 244)">North Gonja</text><text x="461.2" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 461.2 244)">Tempane</text><text x="523.8" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 523.8 244)">Tolon</text><text x="586.2" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 586.2 244)">Binduri</text><text x="648.8" y="244" font-size="9" text-anchor="end" fill="#555" transform="rotate(-35 648.8 244)">North East Gonja</text>
+</svg>
+      </div>
+    </div>
+  </div>
+
+  <div class="limitations">
+    <h2>Interpretation &amp; Limitations</h2>
+    <p>National forecasts use N&asymp;25 annual points &mdash; small by published TB-forecasting standards; addressed via pre-registered fold-1-only hyperparameter locking and co-primary (not LSTM-primary) model reporting. The district TB-Vulnerability Index is a <strong>general structural-deprivation/health-access construct</strong>, not observed or validated TB burden &mdash; no district-level TB case data exists anywhere in Ghana's public reporting to validate it against. Ghana's post-2021 COVID-recovery trajectory is undocumented in peer-reviewed literature, unlike comparator African settings (Zambia, Malawi).</p>
+  </div>
+
+  <footer>
+    <div>Data: WHO Global Health Observatory &middot; Ghana Statistical Service 2021 PHC &middot; Target journal: Int J Tuberculosis &amp; Lung Disease</div>
+    <div class="qr">QR:<br>repo link<br>(pending)</div>
+  </footer>
+</div>
+</body>
+</html>

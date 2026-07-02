@@ -1,0 +1,6 @@
+* text=auto eol=lf
+*.py linguist-language=Python
+*.html linguist-language=HTML
+*.csv linguist-detectable=false
+*.geojson linguist-detectable=false
+*.yml text eol=lf

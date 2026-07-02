@@ -1,0 +1,42 @@
+file,variable,definition,source,years_covered,unit,dtype
+tb_national_panel_2000_2024.csv,year,Calendar year,WHO GHO,1995-2024,year,int
+tb_national_panel_2000_2024.csv,tb_incidence_per100k,TB incidence rate,WHO GHO,1995-2024,"cases/100,000 pop",float
+tb_national_panel_2000_2024.csv,tb_incidence_hiv_pos_per100k,"TB incidence, HIV-positive stratum",WHO GHO,1995-2024,"cases/100,000 pop",float
+tb_national_panel_2000_2024.csv,tb_new_relapse_notified,New + relapse TB cases notified,WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,tb_incident_cases_total,Total incident TB cases (WHO-modelled),WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,tb_incident_cases_children_0_14,"Incident TB cases, age 0-14",WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,tb_incident_cases_hiv_pos,"Incident TB cases, HIV-positive",WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,tb_treatment_coverage_pct,TB treatment coverage,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,mdr_rr_tb_estimated_incident,Estimated MDR/RR-TB incident cases,WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,mdr_rr_tb_confirmed,Confirmed MDR/RR-TB cases,WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,mdr_tb_started_treatment,MDR-TB cases started on treatment,WHO GHO,1995-2024,count,float
+tb_national_panel_2000_2024.csv,new_cases_tested_rr_mdr_pct,New cases tested for RR/MDR-TB,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,prev_treated_tested_rr_mdr_pct,Previously-treated cases tested for RR/MDR-TB,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tx_success_new_pct,"Treatment success, new TB cases",WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tx_success_prev_treated_pct,"Treatment success, previously-treated cases",WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tx_success_mdr_pct,"Treatment success, MDR-TB",WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tx_success_xdr_pct,"Treatment success, XDR-TB",WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tx_success_hiv_pos_pct,"Treatment success, HIV-positive TB",WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tb_known_hiv_status_pct,TB patients with known HIV status,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tb_tested_hiv_positive_pct,TB patients tested HIV-positive,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,tb_hiv_pos_on_art_pct,HIV-positive TB patients on ART,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,hiv_prevalence_adult_15_49_pct,"HIV prevalence, adults 15-49",WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,art_coverage_plhiv_pct,ART coverage among people living with HIV,WHO GHO,1995-2024,%,float
+tb_national_panel_2000_2024.csv,gghe_d_pct_gdp,Domestic government health expenditure,WHO GHO (GHED),1995-2024,% GDP,float
+tb_national_panel_2000_2024.csv,medical_doctors_density,Medical doctors density,WHO GHO (NHWA),1995-2024,"per 10,000 pop",float
+tb_national_panel_2000_2024.csv,life_expectancy_years,Life expectancy at birth,WHO GHE,1995-2024,years,float
+tb_national_panel_2000_2024.csv,covid_era_flag,COVID-era disruption window indicator,Derived (Stage 1),1995-2024,0/1 flag (1 = 2020-2021),int
+district_tb_vulnerability_261.csv,district,MMDA district name,Ghana Statistical Service 2021 PHC,2021,text,str
+district_tb_vulnerability_261.csv,region,"Administrative region (16-region, post-2022)",GSS 2021 PHC,2021,text,str
+district_tb_vulnerability_261.csv,class_type,Urban/rural district typology,GSS 2021 PHC,2021,text,str
+district_tb_vulnerability_261.csv,latitude,District centroid latitude,GSS 2021 PHC,2021,decimal degrees,float
+district_tb_vulnerability_261.csv,longitude,District centroid longitude,GSS 2021 PHC,2021,decimal degrees,float
+district_tb_vulnerability_261.csv,poverty_incidence,Incidence of multidimensional poverty (Alkire-Foster),GSS 2021 PHC,2021,%,float
+district_tb_vulnerability_261.csv,poverty_intensity,Intensity of multidimensional poverty (Alkire-Foster),GSS 2021 PHC,2021,%,float
+district_tb_vulnerability_261.csv,literacy_rate,Literacy rate (1 - illiterate/total population),"Derived, GSS 2021 PHC",2021,proportion,float
+district_tb_vulnerability_261.csv,uninsured_rate,Uninsured population rate,"Derived, GSS 2021 PHC",2021,proportion,float
+district_tb_vulnerability_261.csv,unemployment_rate,Unemployment rate,"Derived, GSS 2021 PHC",2021,proportion,float
+district_tb_vulnerability_261.csv,dependency_ratio,Age-dependency ratio (0-14 + 65+ / 15-64),"Derived, GSS 2021 PHC",2021,ratio,float
+district_tb_vulnerability_261.csv,total_population,Total district population,GSS 2021 PHC,2021,count,int
+district_tb_vulnerability_261.csv,tvi_pca,"TB-Vulnerability Index, PCA composite (primary)","Derived, Stage 3",2021 (single cross-section),standardised score,float
+district_tb_vulnerability_261.csv,tvi_equal,"TB-Vulnerability Index, equal-weighted composite (sensitivity)","Derived, Stage 3",2021 (single cross-section),standardised score,float
