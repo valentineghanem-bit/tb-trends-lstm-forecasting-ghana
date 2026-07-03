@@ -108,7 +108,7 @@ input[type=range]{width:155px;accent-color:var(--primary);cursor:pointer}
  <div class="card span4"><h3 id="scTitle"></h3><p class="cap">Regression + gold ★ what-if prediction.</p><div class="chart" id="scatter"></div></div>
  <div class="card span3"><h3>Cluster tier counts</h3><p class="cap">Regions per LISA class.</p><div class="chart" id="tiers"></div></div>
  <div class="card span4"><h3 id="lolTitle"></h3><p class="cap" id="lolCap">Sorted; dashed line = national mean.</p><div class="chart" id="lollipop"></div></div>
- <div class="card span4"><h3>Indicator heatmap</h3><p class="cap">Min–max scaled per indicator.</p><div class="chart" id="heatmap"></div></div>
+ <div class="card span4"><h3 id="heatTitle">Indicator heatmap</h3><p class="cap" id="heatCap">Min–max scaled per indicator.</p><div class="chart" id="heatmap"></div></div>
  <div class="card span4"><h3>Burden treemap</h3><p class="cap" id="treeCap">Area = outcome · colour = LISA · click to filter.</p><div class="chart" id="treemap"></div></div>
  <div class="card span7"><h3 id="boxTitle"></h3><p class="cap">Distribution of the outcome across regions, grouped by spatial-cluster class.</p><div class="chart" id="box"></div></div>
  <div class="card span5"><h3>Focus region vs national mean</h3><p class="cap">Select a region above to compare.</p><div class="chart" id="bullet"></div></div>
@@ -177,11 +177,16 @@ function mapOpt(which){var metric=which==='lisa'?null:S.metric;var mid=which==='
    opacity:d.name&&active(d)?1:.22,borderColor:flag?'#111':(theme()==='dark'?'#0e1620':'#fff'),borderWidth:flag?1.1:.3}};});
  return{tooltip:{trigger:'item',formatter:function(p){var d=byName[p.data&&p.data.region]||{};return'<b>'+p.name+'</b><br/>'+(p.data?p.data.region:'')+'<br/>'+PRIM.label+' '+(d.v!=null?d.v+PRIM.unit:'–')+(C.hasX?' · '+COV.label+' '+(d.x!=null?d.x:'–'):'')+' · '+(d.lisa||'–');}},
   series:[{type:'map',map:'ghana',roam:true,aspectScale:1,zoom:mapZoom[mid]||1,scaleLimit:{min:1,max:12},data:data,label:{show:false},emphasis:{itemStyle:{areaColor:'#f1c40f'},label:{show:false}},select:{disabled:true}}]};}
-var CAP_N=20; // above CAP_N*2 items, list-style charts (rank/lollipop/treemap) show only the top+bottom
-              // CAP_N by value -- listing every district (vs. 16 regions) is illegible otherwise.
-function capExtremes(arr,key){if(arr.length<=CAP_N*2)return{d:arr,capped:false};
+// Chart panels are a fixed 300px tall (.chart{height:300px}). At that height, labeled
+// category rows need >=18-20px each to stay legible -- so list-style charts (rank/
+// lollipop) cap to CAP_N*2 total rows, and the treemap (which packs by area, not a
+// fixed row height, but still needs enough px per box for a readable label) caps to
+// TREE_N boxes. Both are far below the 40/24 first attempt, which was still cramped.
+var CAP_N=7;     // rank/lollipop: top+bottom 7 = 14 labeled rows
+var TREE_N=10;   // treemap: top+bottom 10 by |value| = 20 boxes
+function capExtremes(arr,key,n){n=n||CAP_N;if(arr.length<=n*2)return{d:arr,capped:false};
  var s=arr.slice().sort(function(a,b){return b[key]-a[key];});
- return{d:s.slice(0,CAP_N).concat(s.slice(-CAP_N)),capped:true};}
+ return{d:s.slice(0,n).concat(s.slice(-n)),capped:true};}
 function sorted(){var m=S.metric,a=R.slice();
  if(S.sort==='alpha')a.sort(function(x,y){return x.short.localeCompare(y.short);});
  else if(S.sort==='cluster'){var o={HH:0,HL:1,LH:2,LL:3,NS:4};a.sort(function(x,y){return(o[x.lisa]-o[y.lisa])||(y[m]-x[m]);});}
@@ -217,24 +222,41 @@ function lolOpt(){var k=C.hasX?'x':'v',full=R.filter(function(x){return x[k]!=nu
   series:[{type:'bar',barWidth:2,silent:true,z:1,data:d.map(function(x){return{value:x[k],itemStyle:{color:gl(),opacity:emph(x.name)}};})},
    {type:'scatter',symbolSize:11,z:2,data:d.map(function(x){return{value:x[k],region:x.name,itemStyle:{color:LISA[x.lisa],opacity:emph(x.name),borderColor:'#fff',borderWidth:1.2}};}),
     markLine:{silent:true,symbol:'none',lineStyle:{color:'#c0392b',type:'dashed'},data:[{xAxis:+mean.toFixed(1),label:{formatter:'mean '+mean.toFixed(1),color:'#c0392b',fontSize:9}}]}}]};}
-function heatOpt(){var inds=C.hasX?[PRIM.label,COV.label]:[PRIM.label];
+function histOpt(){
+ // Used instead of the 2-column heatmap when there is no covariate (C.hasX false):
+ // a heatmap with a single column and 200+ district rows is an unreadable list of
+ // razor-thin cells, not a real heatmap. A binned distribution is the actual
+ // information a single-indicator panel can usefully show at this N.
+ var vs=R.map(function(d){return d.v;}),lo=Math.min.apply(null,vs),hi=Math.max.apply(null,vs);
+ var nb=12,w=(hi-lo)/nb||1,bins=[];for(var i=0;i<nb;i++)bins.push({lo:lo+i*w,hi:lo+(i+1)*w,n:0,byLisa:{HH:0,HL:0,LH:0,LL:0,NS:0}});
+ R.forEach(function(d){var bi=Math.min(nb-1,Math.max(0,Math.floor((d.v-lo)/w)));bins[bi].n++;bins[bi].byLisa[d.lisa]=(bins[bi].byLisa[d.lisa]||0)+1;});
+ var dom=bins.length&&bins.reduce(function(m,b,i){var mx=Object.keys(b.byLisa).reduce(function(mk,k){return b.byLisa[k]>b.byLisa[mk]?k:mk;},'NS');return b.n?mx:m;},'NS');
+ return{grid:{left:44,right:14,top:10,bottom:34},tooltip:{trigger:'item',formatter:function(p){var b=bins[p.dataIndex];return b.lo.toFixed(1)+'–'+b.hi.toFixed(1)+PRIM.unit+': <b>'+b.n+'</b> districts';}},
+  xAxis:{type:'category',data:bins.map(function(b){return b.lo.toFixed(1);}),name:PRIM.label,nameLocation:'middle',nameGap:26,nameTextStyle:{color:ax(),fontSize:10},axisLabel:{color:ax(),fontSize:9,rotate:0},axisLine:{lineStyle:{color:gl()}}},
+  yAxis:{type:'value',name:'Districts',nameTextStyle:{color:ax(),fontSize:10},axisLabel:{color:ax()},splitLine:{lineStyle:{color:gl()}}},
+  series:[{type:'bar',barWidth:'92%',data:bins.map(function(b,i){var mx=Object.keys(b.byLisa).reduce(function(mk,k){return b.byLisa[k]>b.byLisa[mk]?k:mk;},'NS');return{value:b.n,itemStyle:{color:b.n?LISA[mx]:gl(),borderRadius:[2,2,0,0]}};})}]};}
+function heatOpt(){if(!C.hasX)return histOpt();
+ var inds=[PRIM.label,COV.label];
  function nm(k,v){var r=rng(k);return r[1]===r[0]?.5:(v-r[0])/(r[1]-r[0]);}
  var d=R.slice().sort(function(a,b){return b.v-a.v;}),data=[];
- d.forEach(function(r,yi){data.push([0,yi,+nm('v',r.v).toFixed(2)]);if(C.hasX&&r.x!=null)data.push([1,yi,+nm('x',r.x).toFixed(2)]);});
+ d.forEach(function(r,yi){data.push([0,yi,+nm('v',r.v).toFixed(2)]);if(r.x!=null)data.push([1,yi,+nm('x',r.x).toFixed(2)]);});
  return{grid:{left:78,right:14,top:24,bottom:10},tooltip:{position:'top',formatter:function(p){return d[p.value[1]].short+' · '+inds[p.value[0]]+': '+p.value[2];}},
   xAxis:{type:'category',data:inds,position:'top',axisLabel:{color:ax(),fontSize:9},axisLine:{show:false},axisTick:{show:false}},
-  yAxis:{type:'category',data:d.map(function(x){return x.short;}),axisLabel:{color:ax(),fontSize:10},axisLine:{show:false},axisTick:{show:false}},
+  yAxis:{type:'category',data:d.map(function(x){return x.short;}),axisLabel:{show:d.length<=CAP_N*2,color:ax(),fontSize:10},axisLine:{show:false},axisTick:{show:false}},
   visualMap:{min:0,max:1,show:false,inRange:{color:[cs(0),cs(.5),cs(1)]}},
   series:[{type:'heatmap',data:data,label:{show:false},itemStyle:{borderColor:theme()==='dark'?'#16202c':'#fff',borderWidth:2}}]};}
 function treeOpt(){
  // treemap box area must be a positive magnitude -- raw v can be negative (e.g. a
  // mean-centred PCA index), which collapses those boxes to near-zero/invisible.
  // Sized by |v| instead (colour still encodes direction via LISA cluster); capped to
- // the top +/-CAP_N by magnitude so district-scale datasets stay legible.
+ // the top +/-TREE_N by magnitude, with labels suppressed on the smallest boxes
+ // (a tiny box with a forced label just truncates to 1-2 illegible characters).
  var withMag=R.map(function(d){return{d:d,mag:Math.abs(d.v)};});
- var top=withMag.length<=CAP_N*2?withMag:withMag.slice().sort(function(a,b){return b.mag-a.mag;}).slice(0,CAP_N*2);
+ var top=withMag.length<=TREE_N*2?withMag:withMag.slice().sort(function(a,b){return b.mag-a.mag;}).slice(0,TREE_N*2);
+ var maxMag=top.reduce(function(m,t){return Math.max(m,t.mag);},0.0001);
  return{tooltip:{formatter:function(p){return p.name+'<br/>'+PRIM.label+' '+p.value;}},
-  series:[{type:'treemap',roam:false,nodeClick:false,breadcrumb:{show:false},label:{show:true,formatter:'{b}',fontSize:10,color:'#fff'},
+  series:[{type:'treemap',roam:false,nodeClick:false,breadcrumb:{show:false},
+   label:{show:true,formatter:function(p){var t=top[p.dataIndex];return t&&t.mag/maxMag>0.22?p.name:'';},fontSize:10,color:'#fff'},
    data:top.map(function(t){var d=t.d;return{name:d.short,value:+(t.mag+.01).toFixed(2),region:d.name,itemStyle:{color:LISA[d.lisa],opacity:emph(d.name),gapWidth:2,borderColor:theme()==='dark'?'#16202c':'#fff'}};})}]};}
 function q(a,p){a=a.slice().sort(function(x,y){return x-y;});var i=(a.length-1)*p,lo=Math.floor(i);return a[lo]+(a[lo+1]-a[lo]||0)*(i-lo);}
 function boxOpt(){var ks=['HH','HL','LH','LL','NS'],cats=[],bd=[],pts=[];
@@ -265,15 +287,20 @@ function get(id){if(!charts[id]){charts[id]=echarts.init(document.getElementById
  if(id==='mapP'||id==='mapLisa')charts[id].on('click',function(p){var r=regFromMap(p.name);if(r)setFocus(r===S.focus?'':r);});
  else charts[id].on('click',function(p){if(p.data&&p.data.region)setFocus(p.data.region===S.focus?'':p.data.region);});}return charts[id];}
 function titles(){document.getElementById('mapTitle').textContent=metricOf(S.metric).label+' by district';
- var isBig=R.length>CAP_N*2,capNote=isBig?(' (top+bottom '+CAP_N+' of '+R.length+' shown)'):'';
+ var capNote=R.length>CAP_N*2?(' (top+bottom '+CAP_N+' of '+R.length+' shown)'):'';
+ var treeNote=R.length>TREE_N*2?(' (top+bottom '+TREE_N+' of '+R.length+' by magnitude)'):'';
  document.getElementById('rankTitle').textContent='Regional ranking — '+metricOf(S.metric).label;
  document.getElementById('rankCap').textContent='Colour = LISA cluster · dashed line = threshold · click a bar to filter.'+capNote;
  document.getElementById('scTitle').textContent=PRIM.label+' vs '+COV.label;
  document.getElementById('lolTitle').textContent=(C.hasX?COV.label:PRIM.label)+' by region';
  document.getElementById('lolCap').textContent='Sorted; dashed line = national mean.'+capNote;
- document.getElementById('treeCap').textContent='Area = |value| (sign shown by colour) · colour = LISA · click to filter.'+capNote;
+ document.getElementById('treeCap').textContent='Area = |value| (sign shown by colour) · colour = LISA · click to filter.'+treeNote;
  document.getElementById('boxTitle').textContent=PRIM.label+' distribution by cluster class';
- if(!C.hasX){document.getElementById('scatter').parentNode.style.display='none';}}
+ if(!C.hasX){
+  document.getElementById('scatter').parentNode.style.display='none';
+  document.getElementById('heatTitle').textContent='Distribution — '+PRIM.label;
+  document.getElementById('heatCap').textContent='Districts binned by value; colour = dominant LISA cluster per bin.';
+ }}
 function renderAll(){DEFS.forEach(function(c){if(c[0]==='scatter'&&!C.hasX)return;get(c[0]).setOption(c[1](),true);});summary();titles();gradLegend();}
 function renderOne(id){var m={mapP:function(){return mapOpt('v');},rank:rankOpt,scatter:scOpt,tiers:tiersOpt,lollipop:lolOpt,bullet:bulletOpt};if(m[id])get(id).setOption(m[id](),true);}
 function setFocus(n){S.focus=n||'';document.getElementById('regionSel').value=S.focus;renderAll();}
