@@ -58,6 +58,16 @@ P["QA-3 references sequential + Vancouver 1:1"] = (
     refs == list(range(1, len(refs) + 1)) and (not intext or max(intext) <= len(refs))
 )
 
+# QA-3b every listed reference is actually cited in-text at least once (user-caught defect
+# 2026-07-03: Alkire & Foster 2011 and Ghana Statistical Service 2021 were both in the
+# bibliography with assigned numbers but never appeared as [n] anywhere in the body --
+# QA-3 only checked that in-text numbers don't EXCEED the reference count, not that every
+# reference is actually used. Root cause was the Vancouver converter silently dropping any
+# citation written inside a parenthetical mixed with descriptive text, e.g. "(Alkire-Foster
+# method; Alkire & Foster 2011)" -- fixed in assemble_docx.py's vancouver() to convert
+# per-segment instead of requiring the whole parenthetical to be pure citations.)
+P["QA-3b no orphaned references (every listed ref cited in-text)"] = set(refs) <= intext
+
 # QA-4 writing: no AI-isms
 ais = re.findall(r"\b(delve|leverage|utiliz\w+|tapestry|crucial|holistic|multifaceted|paramount)\b", (ab + im + res + dis), re.I)
 P["QA-4 writing: no AI-isms"] = len(ais) == 0
@@ -70,9 +80,15 @@ xr_fig = all((f"Figure {n}" in res and f"Figure {n}" in dis) for n in range(1, 7
 xr_tab = all((f"Table {t}" in res and f"Table {t}" in dis) for t in ["1", "2", "3", "4", "5"])
 P["QA-6 fig/table cross-ref BOTH sections"] = xr_fig and xr_tab
 
-# QA-6b figures/tables cited in ASCENDING order at first appearance in Results (user-caught
-# defect 2026-07-01: Figure 6 was cited before Figures 3-5 because PNG build order != narrative
-# order -- this check exists specifically to catch that defect class recurring).
+# QA-6b figures/tables cited in ASCENDING order at first appearance in RESULTS ONLY
+# (user-caught defect 2026-07-01: Figure 6 was cited before Figures 3-5 because PNG build
+# order != narrative order -- this check exists specifically to catch that defect class
+# recurring). SCOPE IS DELIBERATE, not an oversight: Results reports findings in the order
+# analyses were run, so ascending order is the correct, enforceable convention there.
+# Discussion is organised by argument/theme, not sequence -- Q1 journals routinely revisit
+# earlier figures out of numeric order when a later argument needs them (council-decided
+# 2026-07-03, re-litigated once already; do not re-open). Discussion's real requirement is
+# QA-6 above: every figure/table cited at its natural analytic point in BOTH sections.
 def first_citation_order(text, pattern):
     seen = []
     for m in re.finditer(pattern, text):

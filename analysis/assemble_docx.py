@@ -94,11 +94,24 @@ paren_re = re.compile(r"\(([^()]*\d{4}[^()]*)\)")
 
 
 def vancouver(txt):
+    # A parenthetical mixing descriptive text with a citation (e.g. "(Ashanti Region;
+    # Panford et al. 2022)" or "(Alkire-Foster method; Alkire & Foster 2011)") used to be
+    # left entirely unconverted, because every semicolon-segment had to be a pure known
+    # citation key -- this silently dropped a real citation whenever it was written with
+    # inline context (caught 2026-07 when two references never appeared as [n] anywhere
+    # in the assembled body despite being genuinely used). Now converts per-segment:
+    # citation segments become numbers, descriptive segments are kept as prose, and a
+    # bracketed citation is appended after the prose rather than the whole thing failing.
     def repl(m):
         segs = [s.strip() for s in re.split(r";\s*", m.group(1))]
-        if segs and all(s in num for s in segs):
-            return "[" + ",".join(str(num[s]) for s in segs) + "]"
-        return m.group(0)
+        cite_nums = [str(num[s]) for s in segs if s in num]
+        prose = [s for s in segs if s not in num]
+        if not cite_nums:
+            return m.group(0)
+        cite = "[" + ",".join(cite_nums) + "]"
+        if prose:
+            return "(" + "; ".join(prose) + ") " + cite
+        return cite
     return paren_re.sub(repl, txt)
 
 

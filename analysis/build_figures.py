@@ -67,7 +67,7 @@ model_b = pd.read_csv(DATA / "forecast_folds_model_b.csv")
 with open(DATA / "forecast_metrics_summary.json") as f:
     metrics = json.load(f)
 
-fig, axes = plt.subplots(1, 3, figsize=(14, 4.5), sharey=True)
+fig, axes = plt.subplots(1, 3, figsize=(14, 6.5), sharey=True)
 models = [("arima_pred", "ARIMA", OI["blue"]), ("lstm_pred", "LSTM", OI["orange"]), ("xgb_pred", "XGBoost", OI["green"])]
 for ax, (col, label, color) in zip(axes, models):
     ax.plot(model_a["fold_year"], model_a["true"], "ko-", label="Observed", markersize=5)

@@ -38,6 +38,8 @@ html[data-theme=dark]{--bg:#0e1620;--panel:#16202c;--ink:#e7eef6;--muted:#90a2b6
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
 .wrap{max-width:1480px;margin:0 auto;padding:16px 20px 48px}
 header.top{display:flex;flex-wrap:wrap;gap:14px;align-items:center;justify-content:space-between;background:linear-gradient(120deg,var(--primary),var(--primary2));color:#fff;border-radius:16px;padding:16px 22px;box-shadow:var(--shadow)}
+.caveat{display:none;margin-top:10px;padding:10px 16px;border-radius:10px;border:1.5px solid #b7791f;background:#fffbeb;color:#7c4a03;font-size:12.5px;line-height:1.5}
+[data-theme="dark"] .caveat{background:#3a2e10;color:#f5d896;border-color:#d69e2e}
 header.top h1{margin:0;font-size:1.26rem;font-weight:800;letter-spacing:-.01em}
 header.top .meta{font-size:.76rem;opacity:.92;margin-top:3px}
 .tag{display:inline-block;background:rgba(255,255,255,.2);font-size:.6rem;font-weight:700;padding:2px 8px;border-radius:20px;vertical-align:middle}
@@ -87,6 +89,7 @@ input[type=range]{width:155px;accent-color:var(--primary);cursor:pointer}
 @media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.span3,.span4,.span5,.span6,.span7,.span8{grid-column:span 12}.chart.map{height:380px}}
 </style></head><body><div class="wrap">
 <header class="top"><div><h1 id="ttl"></h1><div class="meta" id="sub"></div></div><div class="brand">HI-EI Dashboard</div></header>
+<div class="caveat" id="caveatBox"></div>
 <div class="toolbar">
  <div class="ctl"><label>Map / ranking metric</label><div class="seg" id="segMetric"></div></div>
  <div class="ctl"><label>Spatial clusters (toggle)</label><div class="chips" id="lisaChips"></div></div>
@@ -151,6 +154,7 @@ var UNIT=C.unitName||'region',UNIT_CAP=UNIT.charAt(0).toUpperCase()+UNIT.slice(1
 // header
 document.getElementById('ttl').innerHTML=C.title+' <span class="tag">'+C.tag+'</span>';
 document.getElementById('sub').textContent=C.sub+' · V. Ghanem · ORCID 0009-0002-8332-0220';
+if(C.caveat){var cb=document.getElementById('caveatBox');cb.style.display='block';cb.innerHTML='<strong>&#9888; '+(C.caveatLabel||'Interpretation caveat')+':</strong> '+C.caveat;}
 document.getElementById('foot').innerHTML='Interactive single-file HI-EI dashboard — works offline. Smart controls: metric switch, cluster toggles, focus filter, sort, threshold slider, '+(C.hasX?'what-if predictor (OLS), ':'')+'zoomable maps, live summary, CSV/PNG/self-download. Data: published '+UNIT+' values for this study.';
 document.getElementById('focusLabel').textContent='Focus '+UNIT;
 document.getElementById('allRegionsOpt').textContent='All '+UNITS;
@@ -293,9 +297,16 @@ function bulletOpt(){
   xAxis:{type:'value',axisLabel:{color:ax()},splitLine:{lineStyle:{color:gl()}}},
   yAxis:{type:'category',data:rows.map(function(r){return r.n;}),axisLabel:{color:ax(),fontSize:10},axisLine:{lineStyle:{color:gl()}}},
   series:[{name:'National mean',type:'bar',barGap:'-100%',barWidth:'48%',data:rows.map(function(r){return r.m;}),itemStyle:{color:NAT,borderColor:NATB,borderWidth:1.2,borderType:'dashed'},z:1},
-   {name:'Focus',type:'bar',barWidth:'38%',data:rows.map(function(r){return r.f;}),itemStyle:{color:function(pp){return fRec?LISA[fRec.lisa]:FOC;}},z:2,label:{show:true,position:'right',color:ax(),formatter:function(p){return p.value.toFixed(1);}}}]};}
+   {name:'Focus',type:'bar',barWidth:'38%',data:rows.map(function(r){return r.f;}),itemStyle:{color:function(pp){return fRec?LISA[fRec.lisa]:FOC;}},z:2,label:{show:true,position:'right',color:ax(),formatter:function(p){return p.value.toFixed(1);}}},
+   // Standalone marker for the national mean: a bar collapses to an invisible sliver
+   // when the underlying metric is a z-score/PCA composite whose mean is ~0 by
+   // construction (bug found 2026-07-04: the "National mean" bar was undetectable
+   // for such indices). A scatter point stays visible regardless of bar width.
+   {name:'National mean',type:'scatter',symbol:'diamond',symbolSize:13,z:3,silent:true,
+    data:rows.map(function(r,i){return{value:[r.m,i],itemStyle:{color:NAT,borderColor:NATB,borderWidth:1.5}};}),
+    label:{show:true,position:'top',color:ax(),fontSize:9,formatter:function(p){return 'mean '+p.value[0].toFixed(2);}}}]};}
 
-function zoomMap(id,factor){if(factor==='reset'){mapZoom[id]=1;get(id).setOption(id==='mapLisa'?mapOpt('lisa'):mapOpt('v'),true);return;}
+function zoomMap(id,factor){if(factor==='reset'){mapZoom[id]=1;var mo=id==='mapLisa'?mapOpt('lisa'):mapOpt('v');mo.animation=false;get(id).setOption(mo,true);return;}
  var c=charts[id];if(!c)return;var z=mapZoom[id]||1;try{z=c.getOption().series[0].zoom||z;}catch(e){}
  mapZoom[id]=Math.max(1,Math.min(12,z*factor));c.setOption({series:[{zoom:mapZoom[id]}]});}
 function gradLegend(){var el=document.getElementById('legP');if(!el)return;var m=S.metric,r=rng(m),stops=[],dp=(r[1]-r[0]>20?0:1);for(var i=0;i<=12;i++)stops.push(cs(i/12));
@@ -321,8 +332,13 @@ function titles(){document.getElementById('mapTitle').textContent=metricOf(S.met
   document.getElementById('heatTitle').textContent='Distribution — '+PRIM.label;
   document.getElementById('heatCap').textContent='Districts binned by value; colour = dominant LISA cluster per bin.';
  }}
-function renderAll(){DEFS.forEach(function(c){if(c[0]==='scatter'&&!C.hasX)return;get(c[0]).setOption(c[1](),true);});summary();titles();gradLegend();}
-function renderOne(id){var m={mapP:function(){return mapOpt('v');},rank:rankOpt,scatter:scOpt,tiers:tiersOpt,lollipop:lolOpt,bullet:bulletOpt};if(m[id])get(id).setOption(m[id](),true);}
+function renderAll(){DEFS.forEach(function(c){if(c[0]==='scatter'&&!C.hasX)return;
+ var opt=c[1]();opt.animation=false; // entrance animation + resize() interact badly: a resize()
+ // called while the animation hasn't finished its first frame can leave bars/points stuck at
+ // their pre-animation state (height:0) indefinitely -- confirmed via zrender shape inspection.
+ // These are data dashboards, not presentation decks -- render final state immediately.
+ get(c[0]).setOption(opt,true);});summary();titles();gradLegend();}
+function renderOne(id){var m={mapP:function(){return mapOpt('v');},rank:rankOpt,scatter:scOpt,tiers:tiersOpt,lollipop:lolOpt,bullet:bulletOpt};if(m[id]){var o=m[id]();o.animation=false;get(id).setOption(o,true);}}
 function setFocus(n){S.focus=n||'';document.getElementById('regionSel').value=S.focus;renderAll();}
 // controls
 var chips=document.getElementById('lisaChips');['HH','LL','HL','LH','NS'].forEach(function(k){var b=document.createElement('button');b.className='chip';b.style.background=LISA[k];b.innerHTML='<span class="dot"></span>'+k;b.onclick=function(){S.clusters[k]=S.clusters[k]?0:1;b.classList.toggle('off',!S.clusters[k]);renderAll();};chips.appendChild(b);});
@@ -350,4 +366,36 @@ lisaLegend();
 renderAll();
 if(C.hasX){var o0=ols();document.getElementById('wfOut').innerHTML='predicted '+PRIM.label+' ≈ <b>'+(o0.a+o0.b*S.wf).toFixed(1)+PRIM.unit+'</b>';}
 window.addEventListener('resize',function(){clearTimeout(window._rt);window._rt=setTimeout(function(){Object.keys(charts).forEach(function(k){charts[k].resize();});},150);});
+// ECharts measures its canvas from the container's box at the exact instant init()
+// runs. renderAll() above calls init() synchronously while the script executes --
+// before the browser guarantees the CSS grid layout has settled (observed: every
+// chart's canvas locked at ~111px regardless of its actual container width, e.g. a
+// 368px card rendering an unreadably tiny/blurry upscaled 111px canvas).
+// A fixed-delay double-rAF resize was tried first but isn't robust against slower or
+// later-settling layouts (reproduced during verification: viewport briefly reported
+// 0x0, the rAF pair fired anyway, and every canvas got locked in at the collapsed
+// ~111px size -- a manual .resize() afterward fixed it instantly, proving the resize
+// mechanism itself works fine and the fixed delay was the weak link). A ResizeObserver
+// on the grid container reacts to the ACTUAL layout event instead of assuming N
+// frames is enough, so it self-heals regardless of how long the browser takes.
+(function(){
+  var gridEl = document.querySelector('.grid');
+  if (!gridEl || typeof ResizeObserver === 'undefined') {
+    requestAnimationFrame(function(){requestAnimationFrame(function(){Object.keys(charts).forEach(function(k){charts[k].resize();});});});
+    return;
+  }
+  // Resize exactly ONCE, on the first non-zero layout, then disconnect immediately --
+  // NOT on every firing. Calling chart.resize() repeatedly in quick succession was
+  // found to reset each series' entrance animation back to its starting frame (bars
+  // stuck at height:0 indefinitely, confirmed via zrender shape inspection), because
+  // ResizeObserver can fire several times within milliseconds as layout settles.
+  var ro = new ResizeObserver(function(entries){
+    var w = entries[0].contentRect.width;
+    if (w > 0) {
+      ro.disconnect();
+      Object.keys(charts).forEach(function(k){charts[k].resize();});
+    }
+  });
+  ro.observe(gridEl);
+})();
 </script></body></html>

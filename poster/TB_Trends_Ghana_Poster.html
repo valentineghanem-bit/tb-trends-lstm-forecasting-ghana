@@ -61,6 +61,8 @@ body{margin:0;background:#7f8c9b;font-family:'Inter',system-ui,Segoe UI,Roboto,A
 .takeaway{background:var(--soft);border-left:6mm solid var(--gold);padding:10mm 12mm;border-radius:0 4mm 4mm 0}
 .takeaway h2{color:var(--ink)}.takeaway p{font-size:7mm;font-weight:600}
 .pf{background:linear-gradient(120deg,var(--primary),var(--primary2));color:#fff;padding:12mm 30mm;display:flex;justify-content:space-between;align-items:center;font-size:5.4mm;line-height:1.5}
+.caveatStrip{display:none;margin:0 30mm 8mm;padding:8mm 12mm;border-radius:4mm;border:1mm solid #b7791f;background:#fffbeb;color:#7c4a03;font-size:5.6mm;line-height:1.5}
+.caveatStrip b{font-weight:800}
 .pf b{font-weight:800}.qr{width:40mm;height:40mm;border:3mm solid #fff;border-radius:3mm}
 </style><style>@media print{@page{size:841mm 1189mm;margin:0}html,body{background:#fff!important}.poster{margin:0!important;box-shadow:none!important;width:841mm!important;height:1189mm!important;min-height:1189mm!important;max-height:1189mm!important;overflow:hidden!important}}</style></head><body><div class="poster">
 <div class="ph">
@@ -86,6 +88,7 @@ body{margin:0;background:#7f8c9b;font-family:'Inter',system-ui,Segoe UI,Roboto,A
   <div class="takeaway"><h2>What it means</h2><p id="pTake"></p></div>
  </div>
 </div>
+<div class="caveatStrip" id="pCaveat"></div>
 <div class="pf"><div id="pFoot"></div><img class="qr" alt="QR" id="pQR"></div>
 </div>
 <script>
@@ -108,6 +111,7 @@ document.getElementById('pTitle').textContent=C.title;document.title=C.title+' �
 document.getElementById('pSub').textContent=C.sub;
 document.getElementById('pHook').innerHTML=N.hook||'';
 document.getElementById('pTake').textContent=N.takeaway||'';
+if(C.caveat){var cs2=document.getElementById('pCaveat');cs2.style.display='block';cs2.innerHTML='<b>&#9888; '+(C.caveatLabel||'Interpretation caveat')+':</b> '+C.caveat;}
 var hi=R.slice().sort(function(a,b){return b.v-a.v;})[0],lo=R.slice().sort(function(a,b){return a.v-b.v;})[0];
 document.getElementById('t1').innerHTML='The burden is <span class="hl">spatially concentrated</span> rather than evenly spread: '+hi.short+' carries the highest '+C.outcome+' ('+hi.v+C.unit+'), '+lo.short+' the lowest ('+lo.v+C.unit+').';
 document.getElementById('cap1').textContent=UNIT_CAP+' '+C.outcome+', coloured by value (colourblind-safe scale).';
@@ -120,7 +124,8 @@ document.getElementById('pBig').innerHTML=big.map(function(k){return'<div class=
 document.getElementById('pFoot').innerHTML='<b>Data:</b> '+(C.data||'Ghana district-level surveillance')+' · <b>Methods:</b> '+(C.methods||'Global/Local Moran&#39;s I · Gi* · ML (RF/XGBoost) · STROBE/RECORD')+'<br/><b>Repo:</b> github.com/valentineghanem-bit/'+C.repo;
 document.getElementById('pQR').src=P.QR||''; // inlined at build time -- no external CDN/API call at render time (offline requirement)
 echarts.registerMap('ghana',GEO);
-function init(id,opt){var c=echarts.init(document.getElementById(id),null,{renderer:'svg'});c.setOption(opt);}
+var posterCharts=[];
+function init(id,opt){opt.animation=false;var c=echarts.init(document.getElementById(id),null,{renderer:'svg'});c.setOption(opt);posterCharts.push(c);}
 function mapOpt(metric){var data=GEO.features.map(function(f){var key=byName[f.properties.name]?f.properties.name:f.properties.region;var d=byName[key]||{};return{name:f.properties.name,itemStyle:{areaColor:metric==='v'?(d.v!=null?cs((d.v-vr[0])/((vr[1]-vr[0])||1)):'#ccc'):(LISA[d.lisa]||'#ccc'),borderColor:'#fff',borderWidth:.4}};});return{series:[{type:'map',map:'ghana',roam:false,aspectScale:1,data:data,label:{show:false},emphasis:{disabled:true}}]};}
 init('cMap',mapOpt('v'));init('cLisa',mapOpt('lisa'));
 (function(){var el=document.getElementById('legMap');if(!el)return;var dp=(vr[1]-vr[0]>20?0:1),stops=[];for(var i=0;i<=12;i++)stops.push(cs(i/12));
@@ -148,4 +153,7 @@ if(C.hasX){var xs=R.filter(function(d){return d.x!=null;}),X=xs.map(function(d){
   yAxis:{type:'category',data:cats.map(function(k){return LNAME[k];}),axisLabel:{fontSize:15}},
   series:[{type:'bar',barWidth:'60%',data:cats.map(function(k,i){return{value:means[i],itemStyle:{color:LISA[k]}};}),
    label:{show:true,position:'right',formatter:'{c}'+C.unit,fontSize:14}}]});}
+// same post-layout resize safety net as the dashboard template (see its comment) --
+// init() can run before the print-panel's mm-based height/width has fully settled.
+requestAnimationFrame(function(){requestAnimationFrame(function(){posterCharts.forEach(function(c){c.resize();});});});
 </script></body></html>

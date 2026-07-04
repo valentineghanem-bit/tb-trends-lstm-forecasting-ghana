@@ -103,7 +103,7 @@ python analysis/spatial_analysis.py            # Moran's I / Getis-Ord Gi* / LIS
 python analysis/shap_decomposition.py          # SHAP feature importance, XGBoost forecast
 python analysis/build_figures.py               # 6 manuscript figures
 python analysis/build_release_package.py       # FAIR master CSV release + data dictionary
-python qa/qa_6pass.py                          # 15-panel QA protocol (requires local manuscript, not in repo)
+python qa/qa_6pass.py                          # 16-panel QA protocol (requires local manuscript, not in repo)
 pytest tests/ -v                                # 5 reproducibility tests
 ```
 
@@ -145,9 +145,10 @@ years covered, unit and data type for all 41 variables across the two release CS
 ## 11. Analytical verification
 
 - `pytest tests/` — 5 reproducibility sanity tests on the rebuilt master datasets, run in CI.
-- `python qa/qa_6pass.py` — 15-panel QA protocol (data integrity, statistical trace, figure/table quality,
-  ascending-order figure/table citation check, references, writing quality, cross-referencing, reporting
-  standards, declarations); badge [`qa/QA_PASSED_2026-07-01.txt`](qa/QA_PASSED_2026-07-01.txt).
+- `python qa/qa_6pass.py` — 16-panel QA protocol (data integrity, statistical trace, figure/table quality,
+  ascending-order figure/table citation check in Results, orphaned-reference check, references, writing
+  quality, cross-referencing, reporting standards, declarations); badge
+  [`qa/QA_PASSED_2026-07-01.txt`](qa/QA_PASSED_2026-07-01.txt).
 - Dashboard and poster were render-verified headlessly. All headline numbers (42%, 216, 126, −4.0, 0.37, 3.71,
   4.07, 0.80, 0.987) are reconciled across the manuscript, the master CSV release, the dashboard, and the poster.
 
