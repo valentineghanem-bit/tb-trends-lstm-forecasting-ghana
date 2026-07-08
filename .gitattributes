@@ -1,6 +1,12 @@
 * text=auto eol=lf
 *.py linguist-language=Python
-*.html linguist-language=HTML
 *.csv linguist-detectable=false
 *.geojson linguist-detectable=false
 *.yml text eol=lf
+
+# dashboard/poster HTML are generated artefacts (bespoke_gen.js) with the ECharts
+# library inlined for offline use -- 1.2MB each, ~95% vendored library code, not
+# authored HTML. Excluding from language stats so the repo reads as the Python
+# analysis pipeline it actually is, not "mostly HTML".
+dashboard/*.html linguist-generated=true
+poster/*.html linguist-generated=true
